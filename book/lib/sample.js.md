@@ -8,7 +8,7 @@ This book is about building a sample microservice application in Node.js that fo
     console.log(x/10);d
     
     for(var i = 0; i < 10; i++) {
-      console.log(i+9);
+      console.log(i+999);
     }
 
 hahaha

@@ -1,6 +1,6 @@
-var placeholders = require('./placeholders')
+var replacementsConfig = require('./replacements')
   , replacements = [];
-for(placeholder in placeholders) replacements.push({pattern: new RegExp(placeholder, "ig"), replacement: placeholders[placeholder]})
+for(replacement in replacementsConfig) replacements.push({pattern: new RegExp(replacement, "ig"), replacement: replacementsConfig[replacement]})
 
 module.exports = function(grunt) {
 
@@ -18,32 +18,32 @@ module.exports = function(grunt) {
     mocha: {
       test: {
         src: ['test/**/*.js'],
-      },
+      }
     },
 
     shell: {
       extractCode: {
         command: function() {
-          return 'sh extract-code.sh';
-        },
+          return "sh extract-code.sh ./book ./ .md";
+        }
       },
       publish: {
         command: function() {
-          return 'sh publish.sh';
-        },
-      },
+          return "cp -r ./book/** ./publish";
+        }
+      }
     },
 
     'string-replace': {
       dist: {
         files: {
-          './': 'book/**/*.md'
+          './': 'publish/**/*.md'
         },
         options: {
           replacements: replacements
         }
-      },
-    },
+      }
+    }
   });
 
   grunt.event.on('watch', function(action, filepath, target) {
@@ -56,6 +56,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mocha');
 
   grunt.registerTask('default', ['watch']);
+  grunt.registerTask('extract', ['shell:extractCode']);
   grunt.registerTask('publish', ['shell:publish', 'string-replace:dist']);
 
 };
